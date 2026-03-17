@@ -324,7 +324,10 @@ document.getElementById("nextBtn").style.display="inline-block"
 }
 }
 
-document.getElementById("nextBtn").onclick=()=>alert("Fertig!")
+
+  document.getElementById("nextBtn").onclick=()=>{
+location.reload()
+  }
 
 document.getElementById("helpBtn").onclick=()=>{
 document.getElementById("overlay").style.display="flex"
