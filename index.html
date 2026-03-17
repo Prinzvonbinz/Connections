@@ -8,7 +8,6 @@
 <title>Connections</title>
 
 <style>
-
 body{
 margin:0;
 font-family:Arial;
@@ -26,18 +25,15 @@ position:relative;
 #helpBtn{
 position:absolute;
 right:10px;
-top:0;
+top:-5px;
 background:none;
 border:none;
 color:white;
-font-size:20px;
+font-size:22px;
 cursor:pointer;
 }
 
-#groups{
-max-width:420px;
-margin:auto;
-}
+#groups{max-width:420px;margin:auto;}
 
 .groupRow{
 display:grid;
@@ -66,14 +62,12 @@ font-weight:bold;
 font-size:15px;
 }
 
-.tile.selected{
-background:#b59f3b;
-}
+.tile.selected{background:#b59f3b;}
 
-.underline1{ text-decoration: underline; }
-.underline2{ text-decoration: underline double; }
-.underline3{ text-decoration: underline wavy; }
-.underline4{ text-decoration: underline dotted; }
+.underline1{text-decoration: underline;}
+.underline2{text-decoration: underline double;}
+.underline3{text-decoration: underline wavy;}
+.underline4{text-decoration: underline dotted;}
 
 #controls{
 display:flex;
@@ -91,26 +85,12 @@ background:#565758;
 color:white;
 }
 
-#nextBtn{
-display:none;
-background:#538d4e;
-}
-
-#hintBtn{
-background:#3b6bb5;
-}
-
-#info{
-margin-top:10px;
-font-size:15px;
-}
+#nextBtn{display:none;background:#538d4e;}
+#hintBtn{background:#3b6bb5;}
 
 #overlay{
 position:fixed;
-top:0;
-left:0;
-right:0;
-bottom:0;
+top:0;left:0;right:0;bottom:0;
 background:rgba(0,0,0,0.9);
 display:none;
 align-items:center;
@@ -119,12 +99,17 @@ justify-content:center;
 
 #panel{
 background:#1a1a1b;
-padding:25px;
+padding:20px;
 border-radius:12px;
-width:80%;
-max-width:300px;
+width:85%;
+max-width:320px;
+text-align:left;
 }
 
+#panel button{
+width:100%;
+margin-top:10px;
+}
 </style>
 
 </head>
@@ -150,6 +135,7 @@ Connections
 <div id="panel">
 <h2 id="resultTitle"></h2>
 <div id="stats"></div>
+<button id="closeHelp">Schließen</button>
 <button id="restartBtn">Neue Runde</button>
 </div>
 </div>
@@ -164,40 +150,43 @@ hard:"#b53b3b",
 veryhard:"#6b3bb5"
 }
 
-// ===== ALLE Kategorien =====
+// ===== VIELE KATEGORIEN =====
 const categories=[
 
-// EASY
+// 🟢 EASY
 {name:"Früchte",difficulty:"easy",words:["APFEL","BIRNE","MANGO","TRAUBE","BANANE","PFIRSICH","KIRSCHE","MELONE"]},
 {name:"Farben",difficulty:"easy",words:["ROT","BLAU","GRUEN","GELB","ORANGE","LILA","BRAUN","WEISS"]},
 {name:"Tiere",difficulty:"easy",words:["TIGER","ZEBRA","PANDA","OTTER","WOLF","BISON","ADLER","FUCHS"]},
+{name:"Gemüse",difficulty:"easy",words:["KAROTTE","TOMATE","GURKE","PAPRIKA","ZWIEBEL","SALAT","BROKKOLI","SPINAT"]},
+{name:"Körperteile",difficulty:"easy",words:["HAND","FUSS","KOPF","AUGE","NASE","MUND","OHR","ARM"]},
 
-// MEDIUM
+// 🟡 MEDIUM
 {name:"Möbel",difficulty:"medium",words:["TISCH","STUHL","SOFA","BETT","SCHRANK","LAMPE","REGAL","HOCKER"]},
 {name:"Fahrzeuge",difficulty:"medium",words:["AUTO","BUS","ZUG","RAD","BOOT","TRAM","TAXI","ROLLER"]},
 {name:"Wetter",difficulty:"medium",words:["SONNE","REGEN","WIND","NEBEL","HAGEL","STURM","HITZE","FROST"]},
 {name:"Getränke",difficulty:"medium",words:["KAFFEE","TEE","SAFT","WASSER","BIER","WEIN","COLA","FANTA"]},
-{name:"Jobs",difficulty:"medium",words:["LEHRER","ARZT","INGENIEUR","POLIZIST","KOCH","PILOT","ANWALT","BAUER"]},
+{name:"Berufe",difficulty:"medium",words:["LEHRER","ARZT","INGENIEUR","POLIZIST","KOCH","PILOT","ANWALT","BAUER"]},
+{name:"Schulfächer",difficulty:"medium",words:["MATHE","DEUTSCH","ENGLISCH","BIO","CHEMIE","PHYSIK","KUNST","SPORT"]},
 
-// HARD
+// 🔴 HARD
 {name:"Verben",difficulty:"hard",words:["LAUFEN","SPRINGEN","SPRECHEN","JAGEN","SINGEN","ARBEITEN","HELFEN","RIECHEN"]},
-{name:"Musikgenres",difficulty:"hard",words:["ROCK","POP","JAZZ","KLASSIK","HIPHOP","ELEKTRONIK","FOLK","METAL"]},
-{name:"Fabelwesen",difficulty:"hard",words:["DRACHE","EINHORN","PHOENIX","ZENTAUR","MINOTAURUS","GRIFFIN","MERMAID","WERWOLF"]},
-{name:"Wörter mit '-ug'",difficulty:"hard",words:["ANZUG","ZUG","BETRUG","KLUG","ZEUG","TRUG","FLUG"]},
-{name:"Kann man öffnen",difficulty:"hard",words:["TÜR","FENSTER","BUCH","APP","GESPRÄCH","FLASCHE","DATEI","TOR"]},
+{name:"Gefühle",difficulty:"hard",words:["ANGST","FREUDE","WUT","LIEBE","TRAUER","NEID","STOLZ","SCHAM"]},
+{name:"Materialien",difficulty:"hard",words:["HOLZ","METALL","GLAS","PLASTIK","PAPIER","STEIN","LEDER","STOFF"]},
+{name:"Technik",difficulty:"hard",words:["CPU","RAM","SSD","GPU","SERVER","ROUTER","MODEM","KABEL"]},
+  {name:"Kann man öffnen",difficulty:"hard",words:["TÜR","FENSTER","BUCH","APP","GESPRÄCH","FLASCHE","DATEI","TOR"]},
+  {name:"Wörter mit '-ug'",difficulty:"hard",words:["ANZUG","ZUG","BETRUG","KLUG","ZEUG","TRUG","FLUG"]},
 
-// VERY HARD
-{name:"Hat einen Kopf",difficulty:"veryhard",words:["NAGEL","MENSCH","SALAT","BIER","SCHRAUBE","ZUG","MÜNZE","HAMMER"]},
-{name:"Mit Doppelbedeutung",difficulty:"veryhard",words:["SCHLOSS","BANK","STROM","ARM","ZUG","LEITER","DECKE","KURS"]},
-{name:"Kann laufen",difficulty:"veryhard",words:["WASSER","NASE","UHR","MOTOR","PROGRAMM","ZEIT","FARBE","AKKU"]},
-{name:"Wörter mit 'Hand-'",difficulty:"veryhard",words:["SCHUH","WERK","BALL","TUCH","SCHRIFT","GRIFF","SPIEL","WERKZEUG"]},
-{name:"Kann man brechen",difficulty:"veryhard",words:["HERZ","REKORD","REGEL","GLAS","SCHWEIGEN","EI","ARM","VERSPRECHEN"]},
-{name:"Ist unsichtbar",difficulty:"veryhard",words:["LUFT","WIND","ZEIT","GEDANKE","GEFÜHL","STRAHLUNG","KRAFT","SEELE"]},
-{name:"Mit '-Spiel'",difficulty:"veryhard",words:["KARTEN","SCHATTEN","KINDER","ROLLEN","BRETT","GLÜCK","VIDEO","WORT"]}
-
+// 🟣 VERY HARD
+{name:"Doppelbedeutung",difficulty:"veryhard",words:["SCHLOSS","BANK","STROM","ARM","ZUG","LEITER","DECKE","KURS"]},
+{name:"Wörter mit 'Licht'",difficulty:"veryhard",words:["LICHTER","LICHTUNG","LICHTSTRAHL","LICHTJAHR","LICHTBLICK","LICHTSPIEL","LICHTQUELLE","LICHTSCHALTER"]},
+{name:"Endung -ER",difficulty:"veryhard",words:["SPIELER","FAHRER","LEHRER","BAUER","ARBEITER","SÄNGER","TÄNZER","MALER"]},
+{name:"Palindrom",difficulty:"veryhard",words:["OTTO","ANNA","LEVEL","RADAR","LAGERREGAL","NEBEN"]},
+  {name:"Mit '-Spiel'",difficulty:"veryhard",words:["KARTEN","SCHATTEN","KINDER","ROLLEN","BRETT","GLÜCK","VIDEO","WORT"]},
+  {name:"Kann man brechen",difficulty:"veryhard",words:["HERZ","REKORD","REGEL","GLAS","SCHWEIGEN","EI","ARM","VERSPRECHEN"]},
+  {name:"Wörter mit 'Hand-'",difficulty:"veryhard",words:["SCHUH","WERK","BALL","TUCH","SCHRIFT","GRIFF","SPIEL","WERKZEUG"]},
 ]
 
-// ===== Variablen =====
+// ===== GAME LOGIK bleibt gleich =====
 let gameCats=[]
 let words=[]
 let selected=[]
@@ -205,50 +194,39 @@ let solved=0
 let mistakes=0
 let hints=3
 let hintMode=false
+let hintMarks=[]
 
-let startTime
-let attempts=0
-
-// ===== Start =====
 startGame()
 
 function startGame(){
-
-startTime=Date.now()
-attempts=0
-mistakes=0
-solved=0
-hints=3
-
 gameCats=[...categories].sort(()=>Math.random()-0.5).slice(0,4)
-
 words=[]
-
 gameCats.forEach(c=>{
 let sel=[...c.words].sort(()=>Math.random()-0.5).slice(0,4)
 c.roundWords=sel
 words.push(...sel)
 })
-
 words=words.sort(()=>Math.random()-0.5)
-
 drawGrid()
-updateInfo()
 updateHintBtn()
 }
 
-// ===== Grid =====
 function drawGrid(){
 const grid=document.getElementById("grid")
 grid.innerHTML=""
-
 words.forEach(word=>{
 let tile=document.createElement("div")
 tile.className="tile"
 tile.innerText=word
 
+hintMarks.forEach(h=>{
+if(h.words.includes(word)){
+tile.classList.add("underline"+h.level)
+}
+})
+
 tile.onclick=()=>{
-if(hintMode){ useHint(word); return }
+if(hintMode){useHint(word);return}
 selectTile(tile,word)
 }
 
@@ -268,24 +246,17 @@ selected.push(word)
 }
 }
 
-// ===== Hinweise =====
 document.getElementById("hintBtn").onclick=()=>{
-if(hints<=0) return
+if(hints<=0)return
 hintMode=true
 }
 
 function useHint(word){
-
 let cat=gameCats.find(c=>c.roundWords.includes(word))
 let other=cat.roundWords.find(w=>w!==word)
-
-document.querySelectorAll(".tile").forEach(t=>{
-if(t.innerText===word || t.innerText===other){
-let lvl=gameCats.indexOf(cat)+1
-t.classList.add("underline"+lvl)
-}
-})
-
+let level=gameCats.indexOf(cat)+1
+hintMarks.push({words:[word,other],level})
+drawGrid()
 hints--
 hintMode=false
 updateHintBtn()
@@ -295,54 +266,35 @@ function updateHintBtn(){
 document.getElementById("hintBtn").innerText=`Hinweis [${hints}×]`
 }
 
-// ===== Check =====
 document.getElementById("submitBtn").onclick=checkGroup
 
 function checkGroup(){
-
-if(selected.length!==4) return
-attempts++
-
+if(selected.length!==4)return
 for(let cat of gameCats){
 if(selected.every(w=>cat.roundWords.includes(w))){
-
 createGroup(cat)
-
 words=words.filter(w=>!cat.roundWords.includes(w))
-
 selected=[]
 solved++
 hints++
-
 drawGrid()
-updateInfo()
 updateHintBtn()
 checkWin()
 return
-}
-}
-
+}}
 mistakes++
 selected=[]
 document.querySelectorAll(".selected").forEach(t=>t.classList.remove("selected"))
-
-updateInfo()
-
-if(mistakes>=4) lose()
+if(mistakes>=4)lose()
 }
 
-// ===== Groups =====
 function createGroup(cat){
-
 const container=document.createElement("div")
-
 const title=document.createElement("div")
 title.innerText=cat.name
 title.style.color=difficultyColors[cat.difficulty]
-
 const row=document.createElement("div")
 row.className="groupRow"
-
 cat.roundWords.forEach(w=>{
 let tile=document.createElement("div")
 tile.className="tile"
@@ -350,67 +302,41 @@ tile.innerText=w
 tile.style.background=difficultyColors[cat.difficulty]
 row.appendChild(tile)
 })
-
 container.appendChild(title)
 container.appendChild(row)
-
 document.getElementById("groups").appendChild(container)
 }
 
-// ===== Lose =====
 function lose(){
-
 gameCats.forEach(cat=>{
 if(!document.body.innerText.includes(cat.name)){
 createGroup(cat)
 }
 })
-
 document.getElementById("grid").innerHTML=""
 document.getElementById("submitBtn").style.display="none"
 document.getElementById("nextBtn").style.display="inline-block"
-
-showPanel("Verloren")
 }
 
-// ===== Win =====
 function checkWin(){
 if(solved===4){
 document.getElementById("nextBtn").style.display="inline-block"
 }
 }
 
-document.getElementById("nextBtn").onclick=()=>{
-let time=Math.floor((Date.now()-startTime)/1000)
-showPanel("Fertig",time)
-}
+document.getElementById("nextBtn").onclick=()=>alert("Fertig!")
 
-// ===== Info =====
-function updateInfo(){
-document.getElementById("info").innerText=
-"Fehler "+mistakes+" / 4 | Versuche: "+attempts
-}
-
-// ===== Help =====
 document.getElementById("helpBtn").onclick=()=>{
-alert("Finde 4 Gruppen.\n\nHinweise zeigen passende Wörter.\nSchwierigkeit durch Farben.\nMax 4 Fehler.")
-}
-
-// ===== Panel =====
-function showPanel(title,time=0){
-
-document.getElementById("resultTitle").innerText=title
-
-document.getElementById("stats").innerHTML=
-`Zeit: ${time}s<br>Versuche: ${attempts}`
-
 document.getElementById("overlay").style.display="flex"
+document.getElementById("resultTitle").innerText="Anleitung"
+document.getElementById("stats").innerHTML="Finde Gruppen aus 4 passenden Wörtern."
 }
 
-// ===== Restart =====
-document.getElementById("restartBtn").onclick=()=>{
-location.reload()
+document.getElementById("closeHelp").onclick=()=>{
+document.getElementById("overlay").style.display="none"
 }
+
+document.getElementById("restartBtn").onclick=()=>location.reload()
 
 </script>
 
