@@ -20,6 +20,18 @@ text-align:center;
 h1{
 margin:10px;
 font-size:22px;
+position:relative;
+}
+
+#helpBtn{
+position:absolute;
+right:10px;
+top:0;
+background:none;
+border:none;
+color:white;
+font-size:20px;
+cursor:pointer;
 }
 
 #groups{
@@ -58,10 +70,21 @@ font-size:15px;
 background:#b59f3b;
 }
 
-#submitBtn, #nextBtn{
+.underline1{ text-decoration: underline; }
+.underline2{ text-decoration: underline double; }
+.underline3{ text-decoration: underline wavy; }
+.underline4{ text-decoration: underline dotted; }
+
+#controls{
+display:flex;
+justify-content:center;
+gap:10px;
+}
+
+button{
 margin-top:10px;
-padding:12px 20px;
-font-size:16px;
+padding:12px 16px;
+font-size:15px;
 border:none;
 border-radius:8px;
 background:#565758;
@@ -71,6 +94,10 @@ color:white;
 #nextBtn{
 display:none;
 background:#538d4e;
+}
+
+#hintBtn{
+background:#3b6bb5;
 }
 
 #info{
@@ -98,28 +125,24 @@ width:80%;
 max-width:300px;
 }
 
-#panel button{
-margin-top:10px;
-width:100%;
-padding:10px;
-border:none;
-border-radius:6px;
-background:#538d4e;
-color:white;
-}
-
 </style>
 
 </head>
 <body>
 
-<h1>Connections</h1>
+<h1>
+Connections
+<button id="helpBtn">❓</button>
+</h1>
 
 <div id="groups"></div>
 <div id="grid"></div>
 
+<div id="controls">
+<button id="hintBtn">Hinweis [3×]</button>
 <button id="submitBtn">Gruppe prüfen</button>
 <button id="nextBtn">Weiter</button>
+</div>
 
 <div id="info"></div>
 
@@ -133,8 +156,7 @@ color:white;
 
 <script>
 
-// ================== SCHWIERIGKEIT ==================
-
+// ===== Farben =====
 const difficultyColors={
 easy:"#538d4e",
 medium:"#b59f3b",
@@ -142,8 +164,7 @@ hard:"#b53b3b",
 veryhard:"#6b3bb5"
 }
 
-// ================== ALLE KATEGORIEN ==================
-
+// ===== ALLE Kategorien =====
 const categories=[
 
 // EASY
@@ -176,21 +197,19 @@ const categories=[
 
 ]
 
-// ================== REST = (gleich wie vorher) ==================
-
+// ===== Variablen =====
 let gameCats=[]
 let words=[]
 let selected=[]
-let mistakes=0
 let solved=0
+let mistakes=0
+let hints=3
+let hintMode=false
 
 let startTime
 let attempts=0
 
-let bestTime=localStorage.getItem("bestTime")
-let totalWins=localStorage.getItem("totalWins") || 0
-let totalGames=localStorage.getItem("totalGames") || 0
-
+// ===== Start =====
 startGame()
 
 function startGame(){
@@ -199,23 +218,26 @@ startTime=Date.now()
 attempts=0
 mistakes=0
 solved=0
+hints=3
 
 gameCats=[...categories].sort(()=>Math.random()-0.5).slice(0,4)
 
 words=[]
 
 gameCats.forEach(c=>{
-let selectedWords=[...c.words].sort(()=>Math.random()-0.5).slice(0,4)
-c.roundWords=selectedWords
-words.push(...selectedWords)
+let sel=[...c.words].sort(()=>Math.random()-0.5).slice(0,4)
+c.roundWords=sel
+words.push(...sel)
 })
 
 words=words.sort(()=>Math.random()-0.5)
 
 drawGrid()
 updateInfo()
+updateHintBtn()
 }
 
+// ===== Grid =====
 function drawGrid(){
 const grid=document.getElementById("grid")
 grid.innerHTML=""
@@ -224,35 +246,64 @@ words.forEach(word=>{
 let tile=document.createElement("div")
 tile.className="tile"
 tile.innerText=word
-tile.onclick=()=>selectTile(tile,word)
+
+tile.onclick=()=>{
+if(hintMode){ useHint(word); return }
+selectTile(tile,word)
+}
+
 grid.appendChild(tile)
 })
 }
 
 function selectTile(tile,word){
-
 if(tile.classList.contains("selected")){
 tile.classList.remove("selected")
 selected=selected.filter(w=>w!==word)
 return
 }
-
 if(selected.length<4){
 tile.classList.add("selected")
 selected.push(word)
 }
 }
 
+// ===== Hinweise =====
+document.getElementById("hintBtn").onclick=()=>{
+if(hints<=0) return
+hintMode=true
+}
+
+function useHint(word){
+
+let cat=gameCats.find(c=>c.roundWords.includes(word))
+let other=cat.roundWords.find(w=>w!==word)
+
+document.querySelectorAll(".tile").forEach(t=>{
+if(t.innerText===word || t.innerText===other){
+let lvl=gameCats.indexOf(cat)+1
+t.classList.add("underline"+lvl)
+}
+})
+
+hints--
+hintMode=false
+updateHintBtn()
+}
+
+function updateHintBtn(){
+document.getElementById("hintBtn").innerText=`Hinweis [${hints}×]`
+}
+
+// ===== Check =====
 document.getElementById("submitBtn").onclick=checkGroup
 
 function checkGroup(){
 
 if(selected.length!==4) return
-
 attempts++
 
 for(let cat of gameCats){
-
 if(selected.every(w=>cat.roundWords.includes(w))){
 
 createGroup(cat)
@@ -261,17 +312,17 @@ words=words.filter(w=>!cat.roundWords.includes(w))
 
 selected=[]
 solved++
+hints++
 
 drawGrid()
 updateInfo()
+updateHintBtn()
 checkWin()
-
 return
 }
 }
 
 mistakes++
-
 selected=[]
 document.querySelectorAll(".selected").forEach(t=>t.classList.remove("selected"))
 
@@ -280,15 +331,14 @@ updateInfo()
 if(mistakes>=4) lose()
 }
 
+// ===== Groups =====
 function createGroup(cat){
 
 const container=document.createElement("div")
 
 const title=document.createElement("div")
 title.innerText=cat.name
-title.style.fontWeight="bold"
-title.style.margin="10px 0 4px 0"
-title.style.color = difficultyColors[cat.difficulty]
+title.style.color=difficultyColors[cat.difficulty]
 
 const row=document.createElement("div")
 row.className="groupRow"
@@ -297,7 +347,7 @@ cat.roundWords.forEach(w=>{
 let tile=document.createElement("div")
 tile.className="tile"
 tile.innerText=w
-tile.style.background = difficultyColors[cat.difficulty]
+tile.style.background=difficultyColors[cat.difficulty]
 row.appendChild(tile)
 })
 
@@ -307,71 +357,58 @@ container.appendChild(row)
 document.getElementById("groups").appendChild(container)
 }
 
-function updateInfo(){
-document.getElementById("info").innerText=
-"Fehler "+mistakes+" / 4 | Versuche: "+attempts
+// ===== Lose =====
+function lose(){
+
+gameCats.forEach(cat=>{
+if(!document.body.innerText.includes(cat.name)){
+createGroup(cat)
+}
+})
+
+document.getElementById("grid").innerHTML=""
+document.getElementById("submitBtn").style.display="none"
+document.getElementById("nextBtn").style.display="inline-block"
+
+showPanel("Verloren")
 }
 
+// ===== Win =====
 function checkWin(){
 if(solved===4){
 document.getElementById("nextBtn").style.display="inline-block"
 }
 }
 
-document.getElementById("nextBtn").onclick=function(){
-
+document.getElementById("nextBtn").onclick=()=>{
 let time=Math.floor((Date.now()-startTime)/1000)
-
-totalGames++
-totalWins++
-
-if(!bestTime || time < bestTime){
-bestTime=time
-localStorage.setItem("bestTime",time)
+showPanel("Fertig",time)
 }
 
-localStorage.setItem("totalWins",totalWins)
-localStorage.setItem("totalGames",totalGames)
-
-showPanel("Gewonnen", time)
+// ===== Info =====
+function updateInfo(){
+document.getElementById("info").innerText=
+"Fehler "+mistakes+" / 4 | Versuche: "+attempts
 }
 
-function lose(){
-
-totalGames++
-localStorage.setItem("totalGames",totalGames)
-
-gameCats.forEach(cat=>{
-createGroup(cat)
-})
-
-document.getElementById("grid").innerHTML=""
-document.getElementById("submitBtn").style.display="none"
-
-showPanel("Verloren")
+// ===== Help =====
+document.getElementById("helpBtn").onclick=()=>{
+alert("Finde 4 Gruppen.\n\nHinweise zeigen passende Wörter.\nSchwierigkeit durch Farben.\nMax 4 Fehler.")
 }
 
-function showPanel(title, time=0){
+// ===== Panel =====
+function showPanel(title,time=0){
 
 document.getElementById("resultTitle").innerText=title
 
-let text=""
-
-if(title==="Gewonnen"){
-text+=`Zeit: ${time}s<br>`
-text+=`Versuche: ${attempts}<br>`
-}
-
-text+=`Beste Zeit: ${bestTime || "-"}s<br>`
-text+=`Spiele: ${totalGames}<br>`
-text+=`Siege: ${totalWins}`
-
-document.getElementById("stats").innerHTML=text
+document.getElementById("stats").innerHTML=
+`Zeit: ${time}s<br>Versuche: ${attempts}`
 
 document.getElementById("overlay").style.display="flex"
 }
 
-document.getElementById("restartBtn").onclick=function(){
+// ===== Restart =====
+document.getElementById("restartBtn").onclick=()=>{
 location.reload()
 }
 
