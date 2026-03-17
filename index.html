@@ -58,10 +58,6 @@ font-size:15px;
 background:#b59f3b;
 }
 
-.groupRow .tile{
-background:#538d4e;
-}
-
 #submitBtn, #nextBtn{
 margin-top:10px;
 padding:12px 20px;
@@ -137,65 +133,50 @@ color:white;
 
 <script>
 
-// ================== DATEN ==================
+// ================== SCHWIERIGKEIT ==================
 
-const categories=[{name:"Früchte",words:["APFEL","BIRNE","MANGO","TRAUBE","BANANE","PFIRSICH","KIRSCHE","MELONE"]},
-{name:"Farben",words:["ROT","BLAU","GRUEN","GELB","ORANGE","LILA","BRAUN","WEISS"]},
-{name:"Tiere",words:["TIGER","ZEBRA","PANDA","OTTER","WOLF","BISON","ADLER","FUCHS"]},
-{name:"Möbel",words:["TISCH","STUHL","SOFA","BETT","SCHRANK","LAMPE","REGAL","HOCKER"]},
-{name:"Fahrzeuge",words:["AUTO","BUS","ZUG","RAD","BOOT","TRAM","TAXI","ROLLER"]},
-{name:"Wetter",words:["SONNE","REGEN","WIND","NEBEL","HAGEL","STURM","HITZE","FROST"]},
- {name:"Süßigkeiten", words:[ "SCHOKOLADE","EIS","KUCHEN","TORTE","BONBON","MARZIPAN","PRÄTSEL","GUMMI" ]},
+const difficultyColors={
+easy:"#538d4e",
+medium:"#b59f3b",
+hard:"#b53b3b",
+veryhard:"#6b3bb5"
+}
 
-  {name:"Verben", words:[ "LAUFEN","SPRINGEN","SPRECHEN","JAGEN","SINGEN","ARBEITEN","HELFEN","RIECHEN" ]},
+// ================== ALLE KATEGORIEN ==================
 
-  {name:"Fabelwesen", words:[ "DRACHE","EINHORN","PHOENIX","ZENTAUR","MINOTAURUS","GRIFFIN","MERMAID","WERWOLF" ]},
+const categories=[
 
-  {name:"Musikgenres", words:[ "ROCK","POP","JAZZ","KLASSIK","HIPHOP","ELEKTRONIK","FOLK","METAL" ]},
+// EASY
+{name:"Früchte",difficulty:"easy",words:["APFEL","BIRNE","MANGO","TRAUBE","BANANE","PFIRSICH","KIRSCHE","MELONE"]},
+{name:"Farben",difficulty:"easy",words:["ROT","BLAU","GRUEN","GELB","ORANGE","LILA","BRAUN","WEISS"]},
+{name:"Tiere",difficulty:"easy",words:["TIGER","ZEBRA","PANDA","OTTER","WOLF","BISON","ADLER","FUCHS"]},
 
-  {name:"Jobs", words:[ "LEHRER","ARZT","INGENIEUR","POLIZIST","KOCH","PILOT","ANWALT","BAUER" ]},
+// MEDIUM
+{name:"Möbel",difficulty:"medium",words:["TISCH","STUHL","SOFA","BETT","SCHRANK","LAMPE","REGAL","HOCKER"]},
+{name:"Fahrzeuge",difficulty:"medium",words:["AUTO","BUS","ZUG","RAD","BOOT","TRAM","TAXI","ROLLER"]},
+{name:"Wetter",difficulty:"medium",words:["SONNE","REGEN","WIND","NEBEL","HAGEL","STURM","HITZE","FROST"]},
+{name:"Getränke",difficulty:"medium",words:["KAFFEE","TEE","SAFT","WASSER","BIER","WEIN","COLA","FANTA"]},
+{name:"Jobs",difficulty:"medium",words:["LEHRER","ARZT","INGENIEUR","POLIZIST","KOCH","PILOT","ANWALT","BAUER"]},
 
-   {name:"Getränke", words:[ "KAFFEE","TEE","SAFT","WASSER","BIER","WEIN","COLA","FANTA" ]},
+// HARD
+{name:"Verben",difficulty:"hard",words:["LAUFEN","SPRINGEN","SPRECHEN","JAGEN","SINGEN","ARBEITEN","HELFEN","RIECHEN"]},
+{name:"Musikgenres",difficulty:"hard",words:["ROCK","POP","JAZZ","KLASSIK","HIPHOP","ELEKTRONIK","FOLK","METAL"]},
+{name:"Fabelwesen",difficulty:"hard",words:["DRACHE","EINHORN","PHOENIX","ZENTAUR","MINOTAURUS","GRIFFIN","MERMAID","WERWOLF"]},
+{name:"Wörter mit '-ug'",difficulty:"hard",words:["ANZUG","ZUG","BETRUG","KLUG","ZEUG","TRUG","FLUG"]},
+{name:"Kann man öffnen",difficulty:"hard",words:["TÜR","FENSTER","BUCH","APP","GESPRÄCH","FLASCHE","DATEI","TOR"]},
 
-  {name:"Wörter mit '-ug'", words:[ "ANZUG", "ZUG", "BETRUG", "KLUG", "ZEUG", "TRUG", "FLUG"]},
+// VERY HARD
+{name:"Hat einen Kopf",difficulty:"veryhard",words:["NAGEL","MENSCH","SALAT","BIER","SCHRAUBE","ZUG","MÜNZE","HAMMER"]},
+{name:"Mit Doppelbedeutung",difficulty:"veryhard",words:["SCHLOSS","BANK","STROM","ARM","ZUG","LEITER","DECKE","KURS"]},
+{name:"Kann laufen",difficulty:"veryhard",words:["WASSER","NASE","UHR","MOTOR","PROGRAMM","ZEIT","FARBE","AKKU"]},
+{name:"Wörter mit 'Hand-'",difficulty:"veryhard",words:["SCHUH","WERK","BALL","TUCH","SCHRIFT","GRIFF","SPIEL","WERKZEUG"]},
+{name:"Kann man brechen",difficulty:"veryhard",words:["HERZ","REKORD","REGEL","GLAS","SCHWEIGEN","EI","ARM","VERSPRECHEN"]},
+{name:"Ist unsichtbar",difficulty:"veryhard",words:["LUFT","WIND","ZEIT","GEDANKE","GEFÜHL","STRAHLUNG","KRAFT","SEELE"]},
+{name:"Mit '-Spiel'",difficulty:"veryhard",words:["KARTEN","SCHATTEN","KINDER","ROLLEN","BRETT","GLÜCK","VIDEO","WORT"]}
 
-  {name:"US-Staaten", words:[ "INDIANA", "IDAHO", "WYOMING", "NYC", "VIRGINA", "KALIFORNIEN", "OHIO", "NEVADA"]},
+]
 
-  {name:"Kann man öffnen", words:[
-"TÜR","FENSTER","BUCH","APP","GESPRÄCH","FLASCHE","DATEI","TOR"
-]},
-
-{name:"Hat einen Kopf", words:[
-"NAGEL","MENSCH","SALAT","BIER","SCHRAUBE","ZUG","MÜNZE","HAMMER"
-]},
-
-{name:"Mit Doppelbedeutung", words:[
-"SCHLOSS","BANK","STROM","ARM","ZUG","LEITER","DECKE","KURS"
-]},
-
-{name:"Kann laufen", words:[
-"WASSER","NASE","UHR","MOTOR","PROGRAMM","ZEIT","FARBE","AKKU"
-]},
-
-{name:"Wörter mit 'Hand-'", words:[
-"SCHUH","WERK","BALL","TUCH","SCHRIFT","GRIFF","SPIEL","WERKZEUG"
-]},
-
-{name:"Kann man brechen", words:[
-"HERZ","REKORD","REGEL","GLAS","SCHWEIGEN","EI","ARM","VERSPRECHEN"
-]},
-
-{name:"Ist unsichtbar", words:[
-"LUFT","WIND","ZEIT","GEDANKE","GEFÜHL","STRAHLUNG","KRAFT","SEELE"
-]},
-
-{name:"Mit '-Spiel'", words:[
-"KARTEN","SCHATTEN","KINDER","ROLLEN","BRETT","GLÜCK","VIDEO","WORT"
-]},                 
-                 ]
-  
-
-// ================== VARIABLEN ==================
+// ================== REST = (gleich wie vorher) ==================
 
 let gameCats=[]
 let words=[]
@@ -209,8 +190,6 @@ let attempts=0
 let bestTime=localStorage.getItem("bestTime")
 let totalWins=localStorage.getItem("totalWins") || 0
 let totalGames=localStorage.getItem("totalGames") || 0
-
-// ================== START ==================
 
 startGame()
 
@@ -236,8 +215,6 @@ words=words.sort(()=>Math.random()-0.5)
 drawGrid()
 updateInfo()
 }
-
-// ================== GRID ==================
 
 function drawGrid(){
 const grid=document.getElementById("grid")
@@ -265,8 +242,6 @@ tile.classList.add("selected")
 selected.push(word)
 }
 }
-
-// ================== GAME LOGIK ==================
 
 document.getElementById("submitBtn").onclick=checkGroup
 
@@ -305,8 +280,6 @@ updateInfo()
 if(mistakes>=4) lose()
 }
 
-// ================== GROUP ==================
-
 function createGroup(cat){
 
 const container=document.createElement("div")
@@ -315,6 +288,7 @@ const title=document.createElement("div")
 title.innerText=cat.name
 title.style.fontWeight="bold"
 title.style.margin="10px 0 4px 0"
+title.style.color = difficultyColors[cat.difficulty]
 
 const row=document.createElement("div")
 row.className="groupRow"
@@ -323,6 +297,7 @@ cat.roundWords.forEach(w=>{
 let tile=document.createElement("div")
 tile.className="tile"
 tile.innerText=w
+tile.style.background = difficultyColors[cat.difficulty]
 row.appendChild(tile)
 })
 
@@ -332,22 +307,16 @@ container.appendChild(row)
 document.getElementById("groups").appendChild(container)
 }
 
-// ================== INFO ==================
-
 function updateInfo(){
 document.getElementById("info").innerText=
 "Fehler "+mistakes+" / 4 | Versuche: "+attempts
 }
-
-// ================== WIN ==================
 
 function checkWin(){
 if(solved===4){
 document.getElementById("nextBtn").style.display="inline-block"
 }
 }
-
-// Weiter Button
 
 document.getElementById("nextBtn").onclick=function(){
 
@@ -367,17 +336,20 @@ localStorage.setItem("totalGames",totalGames)
 showPanel("Gewonnen", time)
 }
 
-// ================== LOSE ==================
-
 function lose(){
 
 totalGames++
 localStorage.setItem("totalGames",totalGames)
 
+gameCats.forEach(cat=>{
+createGroup(cat)
+})
+
+document.getElementById("grid").innerHTML=""
+document.getElementById("submitBtn").style.display="none"
+
 showPanel("Verloren")
 }
-
-// ================== PANEL ==================
 
 function showPanel(title, time=0){
 
@@ -398,8 +370,6 @@ document.getElementById("stats").innerHTML=text
 
 document.getElementById("overlay").style.display="flex"
 }
-
-// ================== RESTART ==================
 
 document.getElementById("restartBtn").onclick=function(){
 location.reload()
