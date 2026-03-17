@@ -44,18 +44,14 @@ margin:auto;
 }
 
 .tile{
-
 height:60px;
 display:flex;
 align-items:center;
 justify-content:center;
-
 background:#3a3a3c;
 border-radius:8px;
-
 font-weight:bold;
 font-size:15px;
-
 }
 
 .tile.selected{
@@ -66,19 +62,19 @@ background:#b59f3b;
 background:#538d4e;
 }
 
-#submitBtn{
-
+#submitBtn, #nextBtn{
 margin-top:10px;
-
 padding:12px 20px;
 font-size:16px;
-
 border:none;
 border-radius:8px;
-
 background:#565758;
 color:white;
+}
 
+#nextBtn{
+display:none;
+background:#538d4e;
 }
 
 #info{
@@ -87,45 +83,33 @@ font-size:15px;
 }
 
 #overlay{
-
 position:fixed;
 top:0;
 left:0;
 right:0;
 bottom:0;
-
 background:rgba(0,0,0,0.9);
-
 display:none;
-
 align-items:center;
 justify-content:center;
-
 }
 
 #panel{
-
 background:#1a1a1b;
 padding:25px;
 border-radius:12px;
-
 width:80%;
 max-width:300px;
-
 }
 
 #panel button{
-
 margin-top:10px;
 width:100%;
 padding:10px;
-
 border:none;
 border-radius:6px;
-
 background:#538d4e;
 color:white;
-
 }
 
 </style>
@@ -136,54 +120,32 @@ color:white;
 <h1>Connections</h1>
 
 <div id="groups"></div>
-
 <div id="grid"></div>
 
 <button id="submitBtn">Gruppe prüfen</button>
+<button id="nextBtn">Weiter</button>
 
 <div id="info"></div>
 
 <div id="overlay">
 <div id="panel">
-
 <h2 id="resultTitle"></h2>
-
 <div id="stats"></div>
-
 <button id="restartBtn">Neue Runde</button>
-
 </div>
 </div>
 
 <script>
 
-const categories=[
+// ================== DATEN ==================
 
-{name:"Früchte",words:[
-"APFEL","BIRNE","MANGO","TRAUBE","BANANE","PFIRSICH","KIRSCHE","MELONE"
-]},
-
-{name:"Farben",words:[
-"ROT","BLAU","GRUEN","GELB","ORANGE","LILA","BRAUN","WEISS"
-]},
-
-{name:"Tiere",words:[
-"TIGER","ZEBRA","PANDA","OTTER","WOLF","BISON","ADLER","FUCHS"
-]},
-
-{name:"Möbel",words:[
-"TISCH","STUHL","SOFA","BETT","SCHRANK","LAMPE","REGAL","HOCKER"
-]},
-
-{name:"Fahrzeuge",words:[
-"AUTO","BUS","ZUG","RAD","BOOT","TRAM","TAXI","ROLLER"
-]},
-
-{name:"Wetter",words:[
-"SONNE","REGEN","WIND","NEBEL","HAGEL","STURM","HITZE","FROST"
-]},
-
-{name:"Süßigkeiten", words:[ "SCHOKOLADE","EIS","KUCHEN","TORTE","BONBON","MARZIPAN","PRÄTSEL","GUMMI" ]},
+const categories=[{name:"Früchte",words:["APFEL","BIRNE","MANGO","TRAUBE","BANANE","PFIRSICH","KIRSCHE","MELONE"]},
+{name:"Farben",words:["ROT","BLAU","GRUEN","GELB","ORANGE","LILA","BRAUN","WEISS"]},
+{name:"Tiere",words:["TIGER","ZEBRA","PANDA","OTTER","WOLF","BISON","ADLER","FUCHS"]},
+{name:"Möbel",words:["TISCH","STUHL","SOFA","BETT","SCHRANK","LAMPE","REGAL","HOCKER"]},
+{name:"Fahrzeuge",words:["AUTO","BUS","ZUG","RAD","BOOT","TRAM","TAXI","ROLLER"]},
+{name:"Wetter",words:["SONNE","REGEN","WIND","NEBEL","HAGEL","STURM","HITZE","FROST"]}]
+  {name:"Süßigkeiten", words:[ "SCHOKOLADE","EIS","KUCHEN","TORTE","BONBON","MARZIPAN","PRÄTSEL","GUMMI" ]},
 
   {name:"Verben", words:[ "LAUFEN","SPRINGEN","SPRECHEN","JAGEN","SINGEN","ARBEITEN","HELFEN","RIECHEN" ]},
 
@@ -231,86 +193,78 @@ const categories=[
 "KARTEN","SCHATTEN","KINDER","ROLLEN","BRETT","GLÜCK","VIDEO","WORT"
 ]},
 
-
-]
+// ================== VARIABLEN ==================
 
 let gameCats=[]
 let words=[]
 let selected=[]
-
 let mistakes=0
 let solved=0
 
-let statsPlayed=0
-let statsWins=0
+let startTime
+let attempts=0
+
+let bestTime=localStorage.getItem("bestTime")
+let totalWins=localStorage.getItem("totalWins") || 0
+let totalGames=localStorage.getItem("totalGames") || 0
+
+// ================== START ==================
 
 startGame()
 
 function startGame(){
+
+startTime=Date.now()
+attempts=0
+mistakes=0
+solved=0
 
 gameCats=[...categories].sort(()=>Math.random()-0.5).slice(0,4)
 
 words=[]
 
 gameCats.forEach(c=>{
-
-let selectedWords=[...c.words]
-.sort(()=>Math.random()-0.5)
-.slice(0,4)
-
+let selectedWords=[...c.words].sort(()=>Math.random()-0.5).slice(0,4)
 c.roundWords=selectedWords
-
 words.push(...selectedWords)
-
 })
 
 words=words.sort(()=>Math.random()-0.5)
 
 drawGrid()
-
 updateInfo()
-
 }
 
-function drawGrid(){
+// ================== GRID ==================
 
+function drawGrid(){
 const grid=document.getElementById("grid")
 grid.innerHTML=""
 
 words.forEach(word=>{
-
 let tile=document.createElement("div")
-
 tile.className="tile"
 tile.innerText=word
-
 tile.onclick=()=>selectTile(tile,word)
-
 grid.appendChild(tile)
-
 })
-
 }
 
 function selectTile(tile,word){
 
 if(tile.classList.contains("selected")){
-
 tile.classList.remove("selected")
 selected=selected.filter(w=>w!==word)
-
 return
-
 }
 
 if(selected.length<4){
-
 tile.classList.add("selected")
 selected.push(word)
-
+}
 }
 
-}
+// ================== GAME LOGIK ==================
 
 document.getElementById("submitBtn").onclick=checkGroup
 
@@ -318,42 +272,38 @@ function checkGroup(){
 
 if(selected.length!==4) return
 
+attempts++
+
 for(let cat of gameCats){
 
 if(selected.every(w=>cat.roundWords.includes(w))){
 
 createGroup(cat)
 
-words=words.filter(w=>!cat.words.includes(w))
+words=words.filter(w=>!cat.roundWords.includes(w))
 
 selected=[]
-
 solved++
 
 drawGrid()
-
 updateInfo()
-
 checkWin()
 
 return
-
 }
-
 }
 
 mistakes++
 
 selected=[]
-
-document.querySelectorAll(".selected")
-.forEach(t=>t.classList.remove("selected"))
+document.querySelectorAll(".selected").forEach(t=>t.classList.remove("selected"))
 
 updateInfo()
 
 if(mistakes>=4) lose()
-
 }
+
+// ================== GROUP ==================
 
 function createGroup(cat){
 
@@ -368,67 +318,89 @@ const row=document.createElement("div")
 row.className="groupRow"
 
 cat.roundWords.forEach(w=>{
-
 let tile=document.createElement("div")
 tile.className="tile"
 tile.innerText=w
-
 row.appendChild(tile)
-
 })
 
 container.appendChild(title)
 container.appendChild(row)
 
 document.getElementById("groups").appendChild(container)
-
 }
+
+// ================== INFO ==================
 
 function updateInfo(){
-
 document.getElementById("info").innerText=
-"Fehler "+mistakes+" / 4"
-
+"Fehler "+mistakes+" / 4 | Versuche: "+attempts
 }
+
+// ================== WIN ==================
 
 function checkWin(){
-
 if(solved===4){
-
-statsPlayed++
-statsWins++
-
-showPanel("Gewonnen")
-
+document.getElementById("nextBtn").style.display="inline-block"
+}
 }
 
+// Weiter Button
+
+document.getElementById("nextBtn").onclick=function(){
+
+let time=Math.floor((Date.now()-startTime)/1000)
+
+totalGames++
+totalWins++
+
+if(!bestTime || time < bestTime){
+bestTime=time
+localStorage.setItem("bestTime",time)
 }
+
+localStorage.setItem("totalWins",totalWins)
+localStorage.setItem("totalGames",totalGames)
+
+showPanel("Gewonnen", time)
+}
+
+// ================== LOSE ==================
 
 function lose(){
 
-statsPlayed++
+totalGames++
+localStorage.setItem("totalGames",totalGames)
 
 showPanel("Verloren")
-
 }
 
-function showPanel(title){
+// ================== PANEL ==================
+
+function showPanel(title, time=0){
 
 document.getElementById("resultTitle").innerText=title
 
-document.getElementById("stats").innerHTML=
+let text=""
 
-"Spiele: "+statsPlayed+"<br>"+
-"Siege: "+statsWins
-
-document.getElementById("overlay").style.display="flex"
-
+if(title==="Gewonnen"){
+text+=`Zeit: ${time}s<br>`
+text+=`Versuche: ${attempts}<br>`
 }
 
+text+=`Beste Zeit: ${bestTime || "-"}s<br>`
+text+=`Spiele: ${totalGames}<br>`
+text+=`Siege: ${totalWins}`
+
+document.getElementById("stats").innerHTML=text
+
+document.getElementById("overlay").style.display="flex"
+}
+
+// ================== RESTART ==================
+
 document.getElementById("restartBtn").onclick=function(){
-
 location.reload()
-
 }
 
 </script>
