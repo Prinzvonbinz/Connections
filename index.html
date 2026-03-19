@@ -245,9 +245,14 @@ selected.push(word)
 }
 }
 
-document.getElementById("hintBtn").onclick=()=>{
-if(hints<=0)return
-hintMode=true
+document.getElementById("hintBtn").onclick = () => {
+  if(hints <= 0){
+    hintMode = false;
+    document.getElementById("hintBtn").style.background = "#3b6bb5"; // normal zurück
+    return;
+  }
+  hintMode = !hintMode; // toggle
+  document.getElementById("hintBtn").style.background = hintMode ? "#b59f3b" : "#3b6bb5"; // gelb wenn aktiv
 }
 
 function useHint(word){
@@ -257,7 +262,8 @@ let level=gameCats.indexOf(cat)+1
 hintMarks.push({words:[word,other],level})
 drawGrid()
 hints--
-hintMode=false
+hintMode = false;
+document.getElementById("hintBtn").style.background = "#3b6bb5"; // wieder normal
 updateHintBtn()
 }
 
