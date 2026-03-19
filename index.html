@@ -159,6 +159,8 @@ const categories=[
 {name:"Tiere",difficulty:"easy",words:["TIGER","ZEBRA","PANDA","OTTER","WOLF","BISON","ADLER","FUCHS"]},
 {name:"Gemüse",difficulty:"easy",words:["KAROTTE","TOMATE","GURKE","PAPRIKA","ZWIEBEL","SALAT","BROKKOLI","SPINAT"]},
 {name:"Körperteile",difficulty:"easy",words:["HAND","FUSS","KOPF","AUGE","NASE","MUND","OHR","ARM"]},
+  {name:"Getreide",difficulty:"easy",words:["WEIZEN","REIS","GERSTE","HAFER","HIRSE","MAIS","DINKEL","ROGGEN"]},
+  {name:"Musikinstrumente",difficulty:"easy",words:["GITARRE","KLAVIER","TROMMEL","VIOLINE","FLÖTE","TRUMPETE","CELLO","SAXOPHON"]},
 
 // 🟡 MEDIUM
 {name:"Möbel",difficulty:"medium",words:["TISCH","STUHL","SOFA","BETT","SCHRANK","LAMPE","REGAL","HOCKER"]},
@@ -167,6 +169,10 @@ const categories=[
 {name:"Getränke",difficulty:"medium",words:["KAFFEE","TEE","SAFT","WASSER","BIER","WEIN","COLA","FANTA"]},
 {name:"Berufe",difficulty:"medium",words:["LEHRER","ARZT","INGENIEUR","POLIZIST","KOCH","PILOT","ANWALT","BAUER"]},
 {name:"Schulfächer",difficulty:"medium",words:["MATHE","DEUTSCH","ENGLISCH","BIO","CHEMIE","PHYSIK","KUNST","SPORT"]},
+  
+  {name:"Sportarten",difficulty:"medium",words:["FUSSBALL","BASKETBALL","TENNIS","VOLLEYBALL","SCHWIMMEN","REITEN","BOXEN","RUGBY"]},
+  {name:"Technische Geräte",difficulty:"medium",words:["HANDY","FERNSEHER","RADIO","KAMERA","LAPTOP","TABLET","DRUCKER","MONITOR"]},
+
 
 // 🔴 HARD
 {name:"Verben",difficulty:"hard",words:["LAUFEN","SPRINGEN","SPRECHEN","JAGEN","SINGEN","ARBEITEN","HELFEN","RIECHEN"]},
@@ -175,7 +181,9 @@ const categories=[
 {name:"Technik",difficulty:"hard",words:["CPU","RAM","SSD","GPU","SERVER","ROUTER","MODEM","KABEL"]},
   {name:"Kann man öffnen",difficulty:"hard",words:["TÜR","FENSTER","BUCH","APP","GESPRÄCH","FLASCHE","DATEI","TOR"]},
   {name:"Wörter mit '-ug'",difficulty:"hard",words:["ANZUG","ZUG","BETRUG","KLUG","ZEUG","TRUG","FLUG"]},
+  {name:"Mythologische Figuren",difficulty:"hard",words:["ZEUS","HERA","ODIN","THOR","LOKI","ATHENA","POSEIDON","ARTEMIS"]},
 
+  
 // 🟣 VERY HARD
 {name:"Doppelbedeutung",difficulty:"veryhard",words:["SCHLOSS","BANK","STROM","ARM","ZUG","LEITER","DECKE","KURS"]},
 {name:"Endung -ER",difficulty:"veryhard",words:["SPIELER","FAHRER","LEHRER","BAUER","ARBEITER","SÄNGER","TÄNZER","MALER"]},
@@ -183,6 +191,9 @@ const categories=[
   {name:"Mit '-Spiel'",difficulty:"veryhard",words:["KARTEN","SCHATTEN","KINDER","ROLLEN","BRETT","GLÜCK","VIDEO","WORT"]},
   {name:"Kann man brechen",difficulty:"veryhard",words:["HERZ","REKORD","REGEL","GLAS","SCHWEIGEN","EI","ARM","VERSPRECHEN"]},
   {name:"Wörter mit 'Hand-'",difficulty:"veryhard",words:["SCHUH","WERK","BALL","TUCH","SCHRIFT","GRIFF","SPIEL","WERKZEUG"]},
+  {name:"Mathematische Begriffe",difficulty:"veryhard",words:["INTEGRAL","ABLEITUNG","VEKTOR","MATRIX","FUNKTION","KOMPLEX","GRAD","WURZEL"]},
+  {name:"Chemische Elemente",difficulty:"veryhard",words:["WASSERSTOFF","Sauerstoff","NITROGEN","KOHLENSTOFF","NEON","EISEN","KUPFER","ZINK"]},
+  
 ]
 
 // ===== GAME LOGIK bleibt gleich =====
@@ -211,7 +222,7 @@ updateHintBtn()
 }
 
 function drawGrid(){
-const grid=document.getElementById("grid")
+const grid=document.gtElementById("grid")
 grid.innerHTML=""
 words.forEach(word=>{
 let tile=document.createElement("div")
